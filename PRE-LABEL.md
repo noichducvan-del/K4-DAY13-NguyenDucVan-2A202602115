@@ -1,15 +1,15 @@
 # Phần bắt buộc — PointPillars và QC pipeline
 
-Trước khi chỉnh cuboid, nhóm 3–4 người chạy **PointPillars pretrained KITTI** trên một PCD được phép dùng. Sản phẩm là ba lượt inference thật, ảnh Side/JSON/CSV, các ca QC lỗi z có kiểm soát và nhận xét riêng của từng thành viên. Không train model; không chạy inference cho cả 30 job của từng người.
+Trước khi chỉnh cuboid, mỗi học viên tự thực hiện phần **PointPillars pretrained KITTI** trên một PCD được phép dùng. Sản phẩm cá nhân gồm ba lượt inference A/B/C, ảnh Side/JSON/CSV, phân tích các ca QC lỗi z có kiểm soát và nhận xét cá nhân. Không train model; không chạy inference cho cả 30 job.
 
 ## A/B/C là gì? Đọc phần này trước khi chạy
 
-**A, B, C là tên ba lần chạy cùng một PCD bằng cùng pretrained model PointPillars.** Không phải ba nhóm, ba người, ba job CVAT hoặc ba model cần train. Một máy trong nhóm chạy cả ba; các thành viên cùng đọc kết quả.
+**A, B, C là tên ba lần chạy cùng một PCD bằng cùng pretrained model PointPillars.** Không phải ba job CVAT hoặc ba model cần train. Một học viên chạy cả ba lượt trên máy cá nhân hoặc máy LC được cấp.
 
 - **Delta** là lượng dịch theo trục z (chiều cao) trước khi đưa điểm vào model, sau bước trừ mặt đất ước lượng. Khi xuất hộp, script cộng lại phép dịch để trả về hệ tọa độ PCD nguồn. `delta=0` vẫn có bước trừ `z_ground`.
 - **Pillar XY** là cạnh của ô vuông trên mặt phẳng x-y dùng để gom điểm thành các cột đứng. `0,16 m` nghĩa là ô rộng 16 cm; `0,32 m` là ô rộng 32 cm. Đây không phải kích thước hộp vật thể.
 
-| Lượt | Nhóm đang thử điều gì? | Delta | Pillar XY |
+| Lượt | Thao tác đang thử | Delta | Pillar XY |
 | --- | --- | ---: | ---: |
 | **A** | Chạy với delta bằng 0 để có kết quả đối chiếu | 0 m | 0,16 m |
 | **B** | Đổi riêng delta để xem input dịch z ảnh hưởng model ra sao | 1,73 m | 0,16 m |
@@ -17,7 +17,7 @@ Trước khi chỉnh cuboid, nhóm 3–4 người chạy **PointPillars pretrain
 
 **So A với B; so B với C.** Không lấy A so C để quy kết nguyên nhân vì hai biến cùng thay đổi. C dùng lại checkpoint pretrained; đây là thí nghiệm đổi biểu diễn đầu vào, không phải model đã được train riêng cho pillar 0,32 m. B là mốc so sánh, chưa phải đáp án đúng.
 
-### Nhóm cần làm đúng những bước nào?
+### Thực hiện cá nhân theo các bước nào?
 
 1. Tải và giải nén gói Student đúng máy; mở Docker. Mở terminal **trong thư mục có `student-bundle.py`**.
 2. Chạy **một lệnh**; runner tự load image, chạy A, B, C và tạo các ca QC. Không cần tự gõ ba lệnh Docker ở phần nâng cao bên dưới.
@@ -25,47 +25,47 @@ Trước khi chỉnh cuboid, nhóm 3–4 người chạy **PointPillars pretrain
    Mac/Linux:
 
    ```bash
-   python3 student-bundle.py run --bundle . --out ../ket-qua-nhom-01
+   python3 student-bundle.py run --bundle . --out ../ket-qua-ca-nhan
    ```
 
    Windows PowerShell:
 
    ```powershell
-   py -3 student-bundle.py run --bundle . --out ..\ket-qua-nhom-01
+   py -3 student-bundle.py run --bundle . --out ..\ket-qua-ca-nhan
    ```
 
-3. Khi lệnh kết thúc, mở thư mục `ket-qua-nhom-01` cạnh thư mục gói. Kiểm `smoke.json` có `status: passed`. Nếu lỗi, giữ log và báo LC; không tự điền kết quả.
+3. Khi lệnh kết thúc, mở thư mục `ket-qua-ca-nhan` cạnh thư mục gói. Kiểm `smoke.json` có `status: passed`. Nếu lỗi, giữ log và báo LC; không tự điền kết quả.
 4. Trong từng thư mục `run-A`, `run-B`, `run-C`, mở:
    - **`summary.csv`**: đọc cột `n_boxes` (số hộp) và `mean_z` (trung bình cao độ tâm hộp, không phải điểm chất lượng).
    - **`side-*.png`**: xem hình chiếu ngang x-z của điểm và hộp; ghi vùng nào khác nhau giữa các lượt.
    - **`boxes-*.json`**: kiểm `delta`, `voxel_size`, nhãn và tọa độ hộp; không cần sửa file.
-5. Điền [mẫu báo cáo](PRE-LABEL-REPORT.md): số hộp từng lượt, một quan sát A/B và một quan sát B/C, dẫn tên file hoặc vùng/hộp làm bằng chứng. Mỗi thành viên viết nhận xét riêng.
+5. Điền [mẫu báo cáo](PRE-LABEL-REPORT.md): số hộp từng lượt, một quan sát A/B và một quan sát B/C, dẫn tên file hoặc vùng/hộp làm bằng chứng. Viết nhận xét từ chính kết quả bạn đã kiểm.
 6. Mở **`qc-cases`** để làm bước nhận lỗi batch/từng hộp ở mục 4. Ba ca này được tạo từ B; **khác với ba lần inference A/B/C**.
 
-Ví dụ câu ghi nhận cần tự điền bằng kết quả của nhóm: “A có … hộp, B có … hộp. Trong ảnh Side vùng x≈… m, em thấy …; chưa đủ bằng chứng để kết luận B đúng hơn.” Không cần số hộp giống một nhóm khác. Không lấy số hộp nhiều nhất hoặc `mean_z` thấp nhất làm đáp án.
+Ví dụ câu ghi nhận cần tự điền bằng kết quả của bạn: “A có … hộp, B có … hộp. Trong ảnh Side vùng x≈… m, em thấy …; chưa đủ bằng chứng để kết luận B đúng hơn.” Không lấy số hộp nhiều nhất hoặc `mean_z` thấp nhất làm đáp án.
 
-**Nộp gì?** Báo cáo nhóm, nhận xét từng thành viên và output A/B/C + QC qua nơi thu private LC chỉ định. Thí nghiệm dùng KITTI demo; không import các file này vào job Robotaxi. Sau khi LC kiểm phần nhóm, tiếp tục luồng cá nhân trong CVAT/portal.
+**Nộp gì?** Báo cáo cá nhân qua nơi thu private LC chỉ định. Giữ output A/B/C + QC ở nơi được phép để LC đối chiếu; trong báo cáo dẫn tên file và số liệu, không commit output hạn chế lên repo cá nhân. Thí nghiệm dùng KITTI demo; không import các file này vào job Robotaxi. Sau khi LC kiểm, tiếp tục luồng cá nhân trong CVAT/portal.
 
 ## Chạy nhanh gói Student
 
-Nhóm có một máy chạy Docker dùng [gói Student](bundle/README-STUDENT.md), tải ZIP đúng kiến trúc tại [Releases](https://github.com/VinUni-AI20k/K4-L2L3-Day13-Robotaxi-LiDAR-3D-Object-Student/releases), giải nén và chạy `student-bundle.py`. Gói có **mẫu KITTI 000008** với [ghi nguồn/giấy phép CC BY-NC-SA 3.0](data/ATTRIBUTION.md), chỉ dùng học thuật phi thương mại; không có dữ liệu Robotaxi. PCD đã đổi z +1.73 m, giữ x/y, bỏ reflectance thật và thêm RGB=0 để dùng adapter hằng hiện tại. Không gọi đây là benchmark KITTI với intensity thật.
+Mỗi học viên dùng [gói Student](bundle/README-STUDENT.md), tải ZIP đúng kiến trúc tại [Releases](https://github.com/VinUni-AI20k/K4-L2L3-Day13-Robotaxi-LiDAR-3D-Object-Student/releases), giải nén và chạy `student-bundle.py` trên máy đủ điều kiện hoặc máy LC được cấp. Gói có **mẫu KITTI 000008** với [ghi nguồn/giấy phép CC BY-NC-SA 3.0](data/ATTRIBUTION.md), chỉ dùng học thuật phi thương mại; không có dữ liệu Robotaxi. PCD đã đổi z +1.73 m, giữ x/y, bỏ reflectance thật và thêm RGB=0 để dùng adapter hằng hiện tại. Không gọi đây là benchmark KITTI với intensity thật.
 
-Runner thực hiện đúng A/B/C và các ca QC mô tả bên dưới; không phải dựng portal. Bài nhóm dùng KITTI trên laptop, bài cá nhân vẫn sửa/QC Robotaxi trong CVAT/viewer. Có thể chạy lệnh từng lượt ở các mục tiếp theo để tìm hiểu cấu hình, nhưng dùng runner là đường chạy thống nhất, không cần build image tại lớp. Máy không chạy được dùng máy LC theo lượt.
+Runner thực hiện đúng A/B/C và các ca QC mô tả bên dưới; không phải dựng portal. Phần KITTI và phần sửa/QC Robotaxi đều là nhiệm vụ cá nhân, nhưng Robotaxi chỉ thao tác trong CVAT/viewer được cấp. Có thể chạy lệnh từng lượt ở các mục tiếp theo để tìm hiểu cấu hình, nhưng dùng runner là đường chạy thống nhất, không cần build image tại lớp. Máy không chạy được dùng máy LC theo lượt.
 
 ## 1. Chọn máy và bắt đầu phiên
 
-Một máy trong nhóm chạy Docker CPU. Nhóm không có máy chạy được dùng máy LC của phòng, chạy lần lượt một yêu cầu; học viên vẫn chọn cấu hình và đọc kết quả. Không gửi inference về ThinkPad vận hành CVAT. Không cần GPU.
+Bạn chạy Docker CPU trên máy cá nhân đủ điều kiện. Nếu không có máy phù hợp, xin LC bố trí máy phòng theo lượt; vẫn tự chọn cấu hình và đọc kết quả. Không gửi inference về ThinkPad vận hành CVAT. Không cần GPU.
 
 1. Tải ZIP Student đúng kiến trúc ở mục trên và chạy thử trước ca. Image được nạp từ archive trong ZIP, không cần registry; PCD `input/demo.pcd` là KITTI đã chuyển đổi có quyền phân phối theo giấy phép. LC cấp nơi thu báo cáo private. Gói Robotaxi riêng của LC vẫn chỉ chạy máy phòng, không chuyển cho học viên.
-2. Nhóm chọn người vận hành lệnh, người kiểm cấu hình/JSON, người xem hình học; người thứ tư ghi log. Đổi vai giữa các lượt. Mỗi người viết nhận xét riêng.
-3. Mỗi thành viên đăng nhập portal, bấm **Bắt đầu phiên 240 phút** khi bắt đầu phần này. Không đợi hết thí nghiệm mới bắt đầu đồng hồ.
+2. Tự vận hành lệnh, kiểm cấu hình/JSON, xem hình học và ghi log cho cả ba lượt.
+3. Đăng nhập portal, bấm **Bắt đầu phiên 240 phút** khi bắt đầu phần này. Không đợi hết thí nghiệm mới bắt đầu đồng hồ.
 4. Kiểm image/PCD chạy được trước buổi học. Nếu có lỗi setup, chuyển sang máy LC; không dành cả giờ để build.
 
 Phân bổ gợi ý trong 240 phút: 60 phút thực hành pre-label, 115 phút sửa nguồn, 50 phút QC, 15 phút phản hồi/tổng kết. Các chặng nguồn/QC có thể xen kẽ; feedback muộn vẫn theo hạn riêng trên portal. 30 job là lượng phân công, không phải lời bảo đảm hoàn thành đủ 30 frame full-range và 30 QC trong thời gian còn lại.
 
 Robotaxi thật vẫn ở CVAT/viewer được cấp; quyền tải tạm trên ThinkPad không tự áp dụng cho laptop hoặc máy LC. Dùng KITTI của gói Student; không lấy PCD Robotaxi từ CVAT về để làm phần này khi chưa được cấp phép. Bộ minh họa phải phù hợp định dạng và hệ tọa độ script; không dùng một scan bất kỳ rồi mặc định nó có gốc mặt đất như Robotaxi.
 
-**Checkpoint:** có PCD được cấp, đúng image, máy chạy được và vai trò nhóm; đồng hồ phiên đã bắt đầu. Thiếu đầu vào thì báo LC, chưa chuyển thành bài chỉ đọc kết quả mà ghi là đã chạy.
+**Checkpoint:** có PCD được cấp, đúng image, máy chạy được; đồng hồ phiên cá nhân đã bắt đầu. Thiếu đầu vào thì báo LC, chưa chuyển thành bài chỉ đọc kết quả mà ghi là đã chạy.
 
 ## 2. Chạy ba cấu hình trên cùng PCD
 
@@ -101,7 +101,7 @@ New-Item -ItemType Directory -Force -Path $OUT_DIR | Out-Null
 docker image inspect $IMAGE --format '{{.Id}} {{.Architecture}}'
 ```
 
-Lưu image ID/architecture và phiên bản repo vào báo cáo. File vào mount read-only; file ra thuộc nhóm, không ghi đè output của nhóm khác. Các lệnh dưới chạy được từng dòng trong cả Bash và PowerShell sau khi khai biến đúng shell:
+Lưu image ID/architecture và phiên bản repo vào báo cáo. File vào mount read-only; file output cá nhân không ghi đè output khác. Các lệnh dưới chạy được từng dòng trong cả Bash và PowerShell sau khi khai biến đúng shell:
 
 ```bash
 docker run --rm --network none --cpus 4 --memory 4g --mount "type=bind,source=$DATA_DIR,target=/data,readonly" --mount "type=bind,source=$OUT_DIR,target=/out" "$IMAGE" --data /data/demo.pcd --out /out/run-A --from KITTI --deltas 0 --voxel-size 0.16 --score-thresh 0.3
@@ -154,15 +154,15 @@ Ba ca gồm bản giữ phép chuyển nguồn, bản mọi hộp bị trừ cù
 3. Nếu một hộp lệch còn các hộp khác không đổi: kiểm bằng nhiều view để xem lỗi đối tượng. Không chốt lỗi pipeline chỉ vì một hộp nổi/chìm.
 4. Nếu không có hộp bám cụm điểm: kiểm đầu vào, ROI và domain/checkpoint. Không vẽ bù cho đủ số lượng kỳ vọng.
 
-**Checkpoint:** mỗi người ghi một quyết định “dừng batch / kiểm từng hộp / chưa đủ bằng chứng” với bằng chứng. Không import `case-*.json` hoặc coi bản “correct conversion” là cuboid đúng; nó chỉ giữ nguyên chuyển đổi z của prediction gốc.
+**Checkpoint:** ghi một quyết định cá nhân “dừng batch / kiểm từng hộp / chưa đủ bằng chứng” với bằng chứng. Không import `case-*.json` hoặc coi bản “correct conversion” là cuboid đúng; nó chỉ giữ nguyên chuyển đổi z của prediction gốc.
 
 ## 5. Nộp bằng chứng và chuyển sang chỉnh/QC
 
-Dùng [mẫu báo cáo](PRE-LABEL-REPORT.md). Nhóm tạo thư mục private `K4-DAY13-TenNhom/`, có `TEAMMATES.md` ghi thành viên/MSSV và `PRE-LABEL-REPORT.md`; output A/B/C và ca QC ở bên trong. Mỗi người có nhận xét riêng. Không commit dữ liệu, kết quả, danh sách người hoặc báo cáo đã điền vào repo công khai.
+Dùng [mẫu báo cáo](PRE-LABEL-REPORT.md). Trong repo cá nhân, đặt `TEAMMATES.md` (thông tin chính người nộp) và `PRE-LABEL-REPORT.md` trong `report/K4-DAY13-HoVaTen-MSSV/`. Output KITTI A/B/C và ca QC lưu tại nơi được phép để LC đối chiếu; báo cáo ghi tên file/số liệu, không commit output hạn chế, PCD/ảnh Robotaxi hoặc dữ liệu người khác lên repo công khai.
 
-1. Người chạy thật ghi máy/architecture/image ID/PCD được cấp/cấu hình, số hộp và trạng thái thực hiện. Nếu chỉ phân tích bộ chuẩn bị trước thì ghi `provided-results`, không ghi `executed-by-group`.
-2. Chuyển báo cáo vào thư mục thu bài private mà LC cấp tại mục 1. Repo/portal hiện **không có upload report, bộ chạy model từ xa hoặc kiểm tra hoàn thành phần này tự động**. LC ghi nhận thủ công trong sổ ca private.
-3. LC kiểm ba output, nhận xét cá nhân, quyết định QC và quyền dữ liệu. Khi đạt phần pre-label, quay lại [HUONG-DAN.md](HUONG-DAN.md) để làm job nguồn/30 job được giao và QC ngẫu nhiên.
+1. Ghi máy/architecture/image ID/PCD được cấp/cấu hình, số hộp và trạng thái thực hiện đúng sự thật. Nếu chỉ phân tích bộ chuẩn bị trước thì ghi `provided-results`, không ghi đã tự chạy.
+2. Nộp URL repo cá nhân trên VLearn; repo có README ở gốc và hai file báo cáo đúng vị trí đã nêu. Output KITTI không commit nếu thuộc diện hạn chế: lưu tại nơi được phép để LC đối chiếu, còn báo cáo ghi tên file và số liệu. VLearn chỉ thu URL repo, không chạy model hoặc xác nhận hoàn thành phần này tự động.
+3. LC kiểm báo cáo trong repo, output tại nơi được phép, nhận xét cá nhân, quyết định QC và quyền dữ liệu. Khi đạt phần pre-label, quay lại [HUONG-DAN.md](HUONG-DAN.md) để làm job nguồn/30 job được giao và QC ngẫu nhiên.
 
 Nếu dùng kết quả có sẵn vì máy lỗi, LC ghi nhận phần phân tích đã làm và hẹn lượt chạy thật trên máy phòng khi có điều kiện; chưa chứng nhận kỹ năng chạy model. Không trừ điểm tự động vì chờ máy. Phần này dùng kiểm tra formative, chưa gắn điểm chính thức hoặc bảng điểm công khai.
 
@@ -173,6 +173,6 @@ PCD KITTI minh họa trên laptop khác frame Robotaxi của 30 job. **Không n�
 3. Khi portal báo đã nạp, bấm **Mở bài nguồn trong CVAT** để xem bản vừa lưu. Nếu tab cũ còn mở, không Save dữ liệu cũ đè lên bản mới.
 4. Rà và sửa các hộp, Save rồi nộp vào hàng đợi QC như hướng dẫn cá nhân.
 
-Nút chỉ dành cho job nguồn của mình, còn `draft`, trong phiên đang hoạt động và chưa có annotation. Nếu job đã có hộp, đã nộp hoặc kết quả import chưa rõ, hệ thống từ chối; báo LC kiểm tra, không xóa bài để thử lại. Không tự nạp khi mở trang. Prediction nạp là gợi ý từ **lượt chạy LC có sẵn**, không phải chứng nhận học viên đã tự chạy model hay reference đúng. Phần tự chạy A/B/C theo nhóm vẫn phải làm riêng.
+Nút chỉ dành cho job nguồn của mình, còn `draft`, trong phiên đang hoạt động và chưa có annotation. Nếu job đã có hộp, đã nộp hoặc kết quả import chưa rõ, hệ thống từ chối; báo LC kiểm tra, không xóa bài để thử lại. Không tự nạp khi mở trang. Prediction nạp là gợi ý từ **lượt chạy LC có sẵn**, không phải chứng nhận học viên đã tự chạy model hay reference đúng. Phần tự chạy A/B/C cá nhân vẫn phải làm riêng.
 
-**Hoàn tất:** LC đã nhận báo cáo, từng thành viên có nhận xét, việc chạy thật/có sẵn được ghi đúng và nhóm biết khi nào phải dừng pipeline trước khi sửa cuboid.
+**Hoàn tất:** LC đã nhận báo cáo cá nhân, có nhận xét của bạn, việc chạy thật/có sẵn được ghi đúng và bạn biết khi nào phải dừng pipeline trước khi sửa cuboid.

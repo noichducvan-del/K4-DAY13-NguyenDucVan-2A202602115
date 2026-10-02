@@ -2,14 +2,14 @@
 
 Hôm nay bạn kiểm tra **pre-label từ PointPillars pretrained**, sửa cuboid 3D bằng bằng chứng và review bài của người khác. Bạn cần nhận ra khi nào lỗi nằm ở cả pipeline, khi nào chỉ một hộp cần chỉnh. Hộp model vẽ sẵn là gợi ý để bắt đầu, không phải đáp án.
 
-Bài gồm hai phần: **nhóm 3–4 người** thực hành trên một PCD được cấp, rồi **cá nhân** sửa và QC các job được giao. Mỗi người có **phiên 240 phút riêng**; không có mốc 14h–18h chung và không ghép một cặp A↔B cố định.
+Bài được thực hiện **theo hình thức cá nhân**: tự chạy (hoặc ghi rõ chưa tự chạy) thí nghiệm trên PCD KITTI được phép dùng, tự phân tích A/B/C và ca QC; sau đó tự sửa và QC các job được giao. Mỗi người có **phiên 240 phút riêng**; không ghép kết quả, danh tính hoặc nhận xét với người khác.
 
 | Tài liệu | Đọc khi nào |
 | --- | --- |
 | README.md (file này) | Đầu buổi: biết cần chuẩn bị, làm gì và nộp ở đâu |
 | [Gói Student tải/chạy](bundle/README-STUDENT.md) | Tải ZIP đúng máy, chạy A/B/C không cần GPU |
 | [PRE-LABEL.md](PRE-LABEL.md) | Trước khi sửa cuboid: chạy PointPillars và kiểm lỗi pipeline |
-| [PRE-LABEL-REPORT.md](PRE-LABEL-REPORT.md), [TEAMMATES.md](TEAMMATES.md) | Ghi bằng chứng thí nghiệm và nhận xét từng thành viên |
+| [PRE-LABEL-REPORT.md](PRE-LABEL-REPORT.md), [TEAMMATES.md](TEAMMATES.md) | Ghi provenance cá nhân và bằng chứng thí nghiệm cá nhân |
 | [Hướng dẫn nạp pre-label có hình](HUONG-DAN-NAP-PRE-LABEL.md) | Đăng nhập → nạp Robotaxi đúng job → chỉnh → QC → v2 |
 | [HUONG-DAN.md](HUONG-DAN.md) | Thao tác nguồn → nộp v1 → QC → sửa và nộp v2 |
 | [LABEL_GUIDELINE.md](LABEL_GUIDELINE.md) | Trước frame đầu tiên và khi không chắc class/hình học |
@@ -21,15 +21,15 @@ Bài gồm hai phần: **nhóm 3–4 người** thực hành trên một PCD đ�
 
 LC gửi **link portal của ca và tài khoản CVAT**. Đăng nhập portal bằng tài khoản đó; khi mở bài nguồn, CVAT cũng cần đúng tài khoản. CVAT chương trình ở [cvat.note.transformerlabs.ai](https://cvat.note.transformerlabs.ai/), nhưng hãy vào đúng job bằng nút **Mở bài nguồn trong CVAT** trên portal để tránh nhầm ca. Link pilot dành cho LC không thay cho link lớp. Không tự tạo user mới nếu chưa thấy bài.
 
-Phần sửa/QC chỉ cần trình duyệt có WebGL. Phần PointPillars dùng [gói Student KITTI](bundle/README-STUDENT.md) trên một máy chạy Docker CPU và Python 3.10+; không cần GPU. Nhóm không có máy phù hợp thực hành cùng máy LC của phòng. LC hỗ trợ theo lượt, không gửi inference cả lớp về ThinkPad. Trước ca, kiểm khả năng chạy với LC; bản đã thử trên Linux Intel/AMD và Mac Apple Silicon không bảo đảm mọi Windows/cấu hình đều chạy được.
+Phần sửa/QC chỉ cần trình duyệt có WebGL. Phần PointPillars dùng [gói Student KITTI](bundle/README-STUDENT.md) trên máy chạy Docker CPU và Python 3.10+; không cần GPU. Nếu máy cá nhân không phù hợp, xin LC bố trí lượt chạy trên máy phòng. LC hỗ trợ theo lượt, không gửi inference cả lớp về ThinkPad. Trước ca, kiểm khả năng chạy với LC; bản đã thử trên Linux Intel/AMD và Mac Apple Silicon không bảo đảm mọi Windows/cấu hình đều chạy được.
 
 ### Dữ liệu nào được phép lấy về?
 
 Repo có tài liệu, code và **một PCD KITTI Student** đã chuyển đổi, ghi nguồn và [giấy phép CC BY-NC-SA 3.0](data/ATTRIBUTION.md). Tải ZIP kèm image đúng kiến trúc từ [Releases](https://github.com/VinUni-AI20k/K4-L2L3-Day13-Robotaxi-LiDAR-3D-Object-Student/releases), không cần LC phát PCD riêng cho bước này. Dữ liệu KITTI chỉ dùng thí nghiệm học thuật phi thương mại và giữ ghi nguồn/giấy phép khi phát bản chuyển đổi. **Không có PCD/ảnh/output Robotaxi.** Gói Robotaxi LC vẫn chỉ cấp máy phòng; học viên không tự tải Robotaxi từ CVAT hay lấy gói LC về laptop.
 
 1. Nhận đúng link/tài khoản của ca từ LC, không dùng tài khoản chung.
-2. Xác nhận nhóm 3–4 người, máy chạy và đầu vào được cấp trước phần thực hành.
-3. Giữ PCD/ảnh/annotation Robotaxi, report đã điền và danh sách thành viên trong kênh riêng do LC chỉ định; PCD KITTI chỉ chia sẻ theo giấy phép đã ghi. Không đăng ảnh/quay màn hình dữ liệu lên repo, VLearn, mạng xã hội hoặc nhóm công khai.
+2. Xác nhận máy chạy và đầu vào được cấp cho phần thực hành cá nhân.
+3. Giữ PCD/ảnh/annotation Robotaxi và output KITTI tại nơi được phép; PCD KITTI chỉ chia sẻ theo giấy phép đã ghi. Không đăng ảnh/quay màn hình dữ liệu lên repo, VLearn, mạng xã hội hoặc nhóm công khai.
 4. Không chia sẻ mật khẩu/token; báo lỗi bằng job ID và thông báo chữ.
 
 **Sẵn sàng khi:** portal nhận đúng tài khoản, LC xác nhận môi trường thực hành và bạn biết nơi thu báo cáo private. Nếu chưa có bài hoặc dữ liệu chưa được cấp, báo LC thay vì mượn tài khoản hay tải một scan bất kỳ.
@@ -38,22 +38,21 @@ Repo có tài liệu, code và **một PCD KITTI Student** đã chuyển đổi,
 
 ### Cần chứng minh điều gì?
 
-PointPillars dùng pretrained KITTI, không train trong buổi này. Nhóm chạy **một PCD** qua ba cấu hình A/B/C; giữ nguyên checkpoint, score và phạm vi. So A/B để quan sát dịch z trước inference; so B/C để quan sát pillar. Đổi đúng một biến giúp bạn biết khác biệt đến từ thao tác nào. Phép dịch input có thể làm model đổi cả số hộp; nó khác với việc dịch cùng một lượng cho mọi hộp sau inference.
+PointPillars dùng pretrained KITTI, không train trong buổi này. Bạn tự chạy **một PCD** qua ba cấu hình A/B/C; giữ nguyên checkpoint, score và phạm vi. So A/B để quan sát dịch z trước inference; so B/C để quan sát pillar. Đổi đúng một biến giúp bạn biết khác biệt đến từ thao tác nào. Phép dịch input có thể làm model đổi cả số hộp; nó khác với việc dịch cùng một lượng cho mọi hộp sau inference.
 
 Theo [PRE-LABEL.md](PRE-LABEL.md), đọc JSON, ảnh Side và CSV. Sau đó kiểm ba ca z có chủ đích từ prediction thật để chọn hành động: dừng và kiểm pipeline nếu cả batch lệch, hoặc kiểm từng đối tượng nếu chỉ một hộp lệch. Những ca này chỉ để luyện nhận lỗi, không import vào CVAT và không được coi là nhãn đúng.
 
-1. Mỗi thành viên bấm **Bắt đầu phiên 240 phút** khi bắt đầu phần pre-label. Thời gian này nằm trong phiên.
-2. Chia vai vận hành, đọc JSON/cấu hình, xem hình học và ghi log; đổi vai giữa các lượt.
-3. Chạy A/B/C trên máy được cấp hoặc máy LC phòng, ghi máy/image/input/config và kết quả thật.
-4. Điền [báo cáo](PRE-LABEL-REPORT.md) với nhận xét riêng từng người, chuyển vào nơi thu private của LC và được LC kiểm trước phần nguồn.
+1. Bấm **Bắt đầu phiên 240 phút** khi bắt đầu phần pre-label. Thời gian này nằm trong phiên cá nhân.
+2. Tự chạy A/B/C trên máy được cấp hoặc máy LC phòng, ghi máy/image/input/config và kết quả thật.
+3. Tự đọc JSON/cấu hình, xem hình học, làm ca QC và điền [báo cáo](PRE-LABEL-REPORT.md); chuyển báo cáo vào nơi thu private của LC để được kiểm trước phần nguồn.
 
-**Hoàn tất khi:** có output ba lượt, quyết định về lỗi batch/từng hộp và nhận xét từng thành viên. Nếu chỉ xem kết quả chuẩn bị trước, ghi `provided-results`; LC chưa ghi nhận bạn đã tự chạy model. Portal chưa có nút upload hoặc khóa tự động bước pre-label. Không import prediction minh họa vào job khác frame.
+**Hoàn tất khi:** có output ba lượt, quyết định về lỗi batch/từng hộp và nhận xét cá nhân. Nếu chỉ xem kết quả chuẩn bị trước, ghi `provided-results`; LC chưa ghi nhận bạn đã tự chạy model. Portal chưa có nút upload hoặc khóa tự động bước pre-label. Không import prediction minh họa vào job khác frame.
 
 ## Làm nguồn, QC và phản hồi theo từng job
 
 ### Vòng làm bài vận hành thế nào?
 
-Bạn có **30 job nguồn**, mỗi job là một frame. Job nguồn mới được tạo **trống theo mặc định**; bài đã import/chỉnh trước đó được giữ nguyên. Trước khi chỉnh, bấm **Nạp pre-label cho job này** trên portal; hệ thống lấy prediction Robotaxi đã chạy trước, kiểm đúng frame/schema và chỉ nạp vào job nguồn trống của mình. Đây không phải lượt tự chạy model của học viên. Không import prediction KITTI demo vào Robotaxi. Bài riêng theo người; không cùng sửa một job với bạn trong nhóm. Sửa class, tâm, kích thước, hướng và hộp thiếu/thừa bằng PCD cùng ảnh camera. Rà cả năm class của schema. Điểm thưa hoặc vùng che khuất cần ghi sự chưa chắc; không co hộp sát vài điểm hoặc giữ nhãn chỉ vì model đã vẽ.
+Bạn có **30 job nguồn**, mỗi job là một frame. Job nguồn mới được tạo **trống theo mặc định**; bài đã import/chỉnh trước đó được giữ nguyên. Trước khi chỉnh, bấm **Nạp pre-label cho job này** trên portal; hệ thống lấy prediction Robotaxi đã chạy trước, kiểm đúng frame/schema và chỉ nạp vào job nguồn trống của mình. Đây không phải lượt tự chạy model của học viên. Không import prediction KITTI demo vào Robotaxi. Bài riêng theo người; không cùng sửa một job với học viên khác. Sửa class, tâm, kích thước, hướng và hộp thiếu/thừa bằng PCD cùng ảnh camera. Rà cả năm class của schema. Điểm thưa hoặc vùng che khuất cần ghi sự chưa chắc; không co hộp sát vài điểm hoặc giữ nhãn chỉ vì model đã vẽ.
 
 Sau khi nộp, **snapshot v1** là bản cố định để người khác đối chiếu. Người QC chỉ xem snapshot và gửi feedback; tác giả sửa tại job nguồn để tạo **v2**. Không cần làm hết 30 job trước khi QC, và không phải chờ một người cụ thể. Người nhận QC có thể khác lớp. Theo [HUONG-DAN.md](HUONG-DAN.md) để đọc nút, trạng thái và cách xử lý lỗi.
 
@@ -66,18 +65,18 @@ Sau khi nộp, **snapshot v1** là bản cố định để người khác đố
 
 ## Nộp gì và tự kiểm trước khi kết thúc?
 
-### Báo cáo nhóm và bài cá nhân nộp khác nhau
+### Báo cáo cá nhân và phần portal
 
-Báo cáo thí nghiệm là sản phẩm nhóm, thu riêng tại nơi LC cấp. Tạo thư mục `K4-DAY13-TenNhom/` với `TEAMMATES.md`, `PRE-LABEL-REPORT.md` và output được phép giữ. Bản đã điền chứa danh tính/dữ liệu, không commit lên repo public. Nếu dùng máy LC, để bằng chứng trong nơi lưu riêng của phòng và theo hướng dẫn LC, không tự sao chép Robotaxi ra ngoài.
+Báo cáo thí nghiệm là sản phẩm cá nhân. Tạo repo cá nhân tên `K4-DAY13-HoVaTen-MSSV`; giữ README ở gốc và đặt đúng hai file báo cáo trong `report/K4-DAY13-HoVaTen-MSSV/`: `TEAMMATES.md` (thông tin người nộp) và `PRE-LABEL-REPORT.md`. Trên VLearn, nộp URL repo cá nhân rồi xác nhận bài nộp hiển thị đúng liên kết/trạng thái đã gửi. Không đưa PCD/ảnh/annotation Robotaxi hoặc output hạn chế vào Git. Output KITTI giữ tại nơi được phép để LC đối chiếu; báo cáo dẫn tên file và số liệu. Nếu dùng máy LC, tuân thủ nơi lưu bằng chứng riêng của phòng.
 
-Phần cá nhân nộp trực tiếp qua CVAT và portal: annotation đã Save, v1, feedback và phản hồi/v2. Không nộp ZIP hay CSV thay thế vòng này. Mỗi người chịu trách nhiệm thao tác của mình dù phần pre-label có làm chung. Thời lượng gợi ý là 60 phút pre-label, 115 phút nguồn, 50 phút QC và 15 phút phản hồi; các chặng có thể xen kẽ. Đây không phải cam kết làm đủ 30 frame full-range và 30 QC trong thời gian còn lại.
+Annotation đã Save, snapshot v1, feedback và v2/phản hồi nộp trực tiếp qua CVAT/portal; repo và VLearn không thay thế các thao tác này. Không nộp ZIP hay CSV thay thế vòng đó. Bạn tự chịu trách nhiệm cho toàn bộ phần pre-label và CVAT/portal. Thời lượng gợi ý là 60 phút pre-label, 115 phút nguồn, 50 phút QC và 15 phút phản hồi; các chặng có thể xen kẽ. Đây không phải cam kết làm đủ 30 frame full-range và 30 QC trong thời gian còn lại.
 
-1. Kiểm báo cáo nhóm đã đến LC và từng người có nhận xét riêng, ghi đúng đã chạy thật hay chỉ phân tích.
+1. Kiểm repo VLearn đúng tên/cấu trúc, có đúng hai file Markdown trong thư mục report; báo cáo có nhận xét của bạn và ghi đúng đã chạy thật hay chỉ phân tích.
 2. Kiểm nguồn đã Save trước mỗi lượt nộp; phạm vi toàn frame chỉ chọn khi thật sự tìm cả thiếu và thừa.
 3. Kiểm feedback đã **nộp**, không còn chỉ trong ô đang gõ; không đóng tab giữa lượt review chưa lưu.
 4. Xem **Hạn phản hồi** từng bài. Feedback đến muộn có cửa sổ ít nhất 24 giờ sau mốc muộn hơn giữa cuối phiên và lúc feedback đến; theo hạn portal hiển thị.
 
-**Kiểm cuối:** bài đang chờ reviewer được ghi đúng trạng thái; bạn không bị trừ điểm vì đợi hàng đợi. Điểm hiện dùng formative và chỉ quản trị thấy; xem [RUBRIC.md](RUBRIC.md) để tự kiểm thay vì suy ra bài đúng từ số hộp hoặc score model.
+**Kiểm cuối:** VLearn đã nhận URL repo; phần CVAT/portal đã Save và nộp đúng trạng thái, còn việc đang chờ reviewer được ghi rõ. Bạn không bị trừ điểm vì đợi hàng đợi. Điểm hiện dùng formative và chỉ quản trị thấy; xem [RUBRIC.md](RUBRIC.md) để tự kiểm thay vì suy ra bài đúng từ số hộp hoặc score model.
 
 ## Câu hỏi hay gặp
 
@@ -89,6 +88,6 @@ Phần cá nhân nộp trực tiếp qua CVAT và portal: annotation đã Save, 
 
 **PCD giật hoặc tải lâu?** Giữ một job mở, đóng bớt tab, kiểm mạng/WebGL và báo LC với job ID/thông báo. Không tải PCD về để vượt lỗi.
 
-**Máy nhóm không chạy Docker?** Làm cùng máy LC phòng theo lượt. Kết quả có sẵn hỗ trợ phân tích nhưng phải ghi rõ chưa trực tiếp chạy.
+**Máy cá nhân không chạy Docker?** Xin LC bố trí máy phòng theo lượt. Kết quả có sẵn hỗ trợ phân tích nhưng phải ghi rõ chưa trực tiếp chạy.
 
 **Repo public có phải được phép public Robotaxi không?** Không. Gói Student KITTI được cấp theo giấy phép riêng; Robotaxi, tài khoản và bài làm vẫn riêng theo ca.

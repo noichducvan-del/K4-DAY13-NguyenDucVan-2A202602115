@@ -12,17 +12,17 @@ Mở [portal chương trình](https://precious-opera-rarely-essays.trycloudflare
 
 **Kiểm tra:** portal hiện đúng username và ca của bạn. Không dùng tài khoản pilot LC hoặc tài khoản của người khác.
 
-## 2. Bắt đầu phiên và làm A/B/C theo nhóm
+## 2. Bắt đầu phiên và làm A/B/C cá nhân
 
 Bấm **Bắt đầu phiên 240 phút** khi bắt đầu phần PointPillars. Mỗi người có đồng hồ riêng, không phải mốc giờ chung của lớp.
 
 ![Nút Bắt đầu phiên 240 phút](images/prelabel-portal/02-start.jpg)
 
-Nhóm 3–4 người tự chạy A/B/C trên một máy theo [PRE-LABEL.md](PRE-LABEL.md), dùng **gói Student KITTI**. So A/B để kiểm dịch z, B/C để kiểm pillar; ghi báo cáo private và nhờ LC kiểm trước khi làm nguồn. Nhóm không chạy được dùng máy LC phòng theo lượt.
+Tự chạy A/B/C theo [PRE-LABEL.md](PRE-LABEL.md), dùng **gói Student KITTI** trên máy đủ điều kiện hoặc máy LC phòng theo lượt. So A/B để kiểm dịch z, B/C để kiểm pillar; ghi báo cáo cá nhân private và nhờ LC kiểm trước khi làm nguồn.
 
 | Bước | Đầu vào và nơi chạy | Kết quả dùng ở đâu? |
 | --- | --- | --- |
-| Thí nghiệm A/B/C | KITTI trong gói Student; Docker CPU máy nhóm/máy LC | Đọc Side, JSON, CSV và viết báo cáo nhóm |
+| Thí nghiệm A/B/C | KITTI trong gói Student; Docker CPU máy cá nhân/máy LC | Đọc Side, JSON, CSV và viết báo cáo cá nhân |
 | Nạp pre-label trên portal | Prediction Robotaxi đúng frame do LC chạy trước | Nạp vào job nguồn trống của chính bạn để chỉnh |
 
 **Không import JSON KITTI hoặc các ca `training_only` vào job Robotaxi.** Nút portal không chạy model trên máy bạn và không thay thế bằng chứng tự chạy A/B/C. Prediction cũng không phải ground truth/reference.
@@ -37,7 +37,7 @@ Nhóm 3–4 người tự chạy A/B/C trên một máy theo [PRE-LABEL.md](PRE-
 
 ![Thẻ nguồn có nút Nạp pre-label cho job này và nút nộp QC](images/prelabel-portal/03-import-submit.jpg)
 
-**Kiểm tra:** đúng job/frame, hộp prediction đã xuất hiện trong CVAT. Số hộp tùy frame; không cần bằng số trong ví dụ hoặc bằng nhóm khác.
+**Kiểm tra:** đúng job/frame, hộp prediction đã xuất hiện trong CVAT. Số hộp tùy frame; không cần bằng số trong ví dụ hoặc người học khác.
 
 Hệ thống chỉ cho nạp vào bài nguồn **trống**, đúng người được giao, còn `draft`, trong phiên đã bắt đầu và chưa hết hạn. Hệ thống kiểm frame/schema trước khi nạp và từ chối bài đã có annotation hoặc đã nộp. Job mới mở trống là bình thường: pre-label không tự nạp cho tất cả mọi người.
 

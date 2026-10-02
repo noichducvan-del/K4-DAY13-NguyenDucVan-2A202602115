@@ -2,18 +2,18 @@
 
 Tài liệu này giúp bạn biết bài cần có bằng chứng gì. Điểm trong pilot/ca hiện tại **chỉ quản trị thấy**; repo không công bố điểm cá nhân, đáp án hay trọng số điểm môn chính thức. Không áp dụng bảng 70/30 của script nhóm cũ cho luồng này.
 
-## 1. Phần PointPillars theo nhóm
+## 1. Phần PointPillars cá nhân
 
-LC kiểm báo cáo tại nơi thu private của phòng. Mỗi thành viên có vai trò và nhận xét riêng; một người chạy không có nghĩa các thành viên khác được bỏ phần phân tích.
+LC kiểm báo cáo cá nhân trong repo được nộp qua VLearn và đối chiếu output ở nơi được phép. Mỗi học viên tự chịu trách nhiệm thực hiện hoặc ghi trung thực phần chưa thể chạy.
 
 | Cần có | Bằng chứng để tự kiểm |
 | --- | --- |
 | Đầu vào/môi trường đúng | PCD được cấp, máy/architecture, image/checkpoint, phạm vi và cấu hình được ghi |
-| Thực hiện được mô tả trung thực | Phân biệt chạy bởi nhóm, chạy trên máy LC và chỉ đọc `provided-results` |
+| Thực hiện được mô tả trung thực | Phân biệt tự chạy trên máy cá nhân, chạy trên máy LC và chỉ đọc `provided-results` |
 | Ba lượt có thể đối chiếu | JSON/Side/CSV A/B/C, cùng frame/checkpoint/score/ROI, đổi đúng một biến |
 | Đọc kết quả có cơ sở | So A/B và B/C bằng số liệu và file, không chọn cấu hình vì nhiều hộp hơn |
 | Phân biệt lỗi pipeline/đối tượng | Quyết định dừng batch hay kiểm từng hộp với bằng chứng; không import ca lỗi |
-| Nhận xét cá nhân | Vai trò, quan sát, phép z thuận/ngược và điều chưa chắc của từng người |
+| Nhận xét cá nhân | Quan sát, phép z thuận/ngược, quyết định QC và điều chưa chắc của chính học viên |
 
 **Tự kiểm:** LC đã nhận báo cáo, output được giữ riêng đúng quyền và phần chưa thực hiện được ghi rõ. Bước này do LC ghi nhận thủ công; portal chưa tự upload/chấm báo cáo pre-label.
 
